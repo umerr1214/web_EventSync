@@ -16,9 +16,11 @@ const AdminDashboard = () => {
           <li className="p-2 rounded-lg hover:bg-gray-200 cursor-pointer">
             Dashboard
           </li>
-          <li className="p-2 rounded-lg hover:bg-gray-200 cursor-pointer">
+        <Link to="/admin/users">
+        <li className="p-2 rounded-lg hover:bg-gray-200 cursor-pointer">
             Manage Users
-          </li>
+        </li>
+        </Link>
           <Link to="/admin/events">
             <li className="p-2 rounded-lg hover:bg-gray-200 cursor-pointer">
                 Manage Events
