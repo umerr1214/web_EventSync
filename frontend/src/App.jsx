@@ -1,8 +1,9 @@
 // src/App.jsx
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { TicketProvider } from "./context/TicketContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // Dashboards
@@ -13,6 +14,10 @@ import AdminDashboard from "./pages/admin/Dashboard";
 import ManageEvents from "./pages/admin/ManageEvents";
 import ManageUsers from "./pages/admin/ManageUsers";
 import ManageTickets from "./pages/admin/ManageTickets";
+
+import Events from "./pages/student/Events";
+import EventDetails from "./pages/student/EventDetails";
+import MyTickets from "./pages/student/MyTickets";
 
 const Home = () => {
   const { user, logout } = useAuth();
@@ -46,8 +51,9 @@ const Home = () => {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
+      <TicketProvider>
+        <Router>
+          <Routes>
 
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -82,6 +88,12 @@ function App() {
             }
           />
 
+          {/* Redirect /admin/dashboard to /admin */}
+          <Route
+            path="/admin/dashboard"
+            element={<Navigate to="/admin" replace />}
+          />
+
           <Route
             path="/admin/events"
             element={
@@ -109,8 +121,36 @@ function App() {
             }
           />
 
-        </Routes>
-      </Router>
+          <Route
+            path="/student/events"
+            element={
+              <ProtectedRoute allowedRoles={["student"]}>
+                <Events />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/student/events/:id"
+            element={
+              <ProtectedRoute allowedRoles={["student"]}>
+                <EventDetails />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/student/tickets"
+            element={
+              <ProtectedRoute allowedRoles={["student"]}>
+                <MyTickets />
+              </ProtectedRoute>
+            }
+          />
+
+          </Routes>
+        </Router>
+      </TicketProvider>
     </AuthProvider>
   );
 }
