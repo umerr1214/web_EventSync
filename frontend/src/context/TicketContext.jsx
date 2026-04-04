@@ -1,10 +1,12 @@
 // src/context/TicketContext.jsx
 import { createContext, useContext, useState } from "react";
+import { useAuth } from "./AuthContext";
 
 const TicketContext = createContext();
 
 export const TicketProvider = ({ children }) => {
   const [tickets, setTickets] = useState([]);
+  const { user } = useAuth();
   
   const [events, setEvents] = useState([
     { id: 1, title: "Music Night", ticketsLeft: 50 },
@@ -13,7 +15,9 @@ export const TicketProvider = ({ children }) => {
 
   const addTicket = (ticket) => {
     const exists = tickets.find(
-      (t) => t.eventId === ticket.eventId
+      (t) =>
+        t.eventId === ticket.eventId &&
+        t.userEmail === user.email
     );
 
     if (exists) {
@@ -37,13 +41,20 @@ export const TicketProvider = ({ children }) => {
       )
     );
 
-    setTickets((prev) => [...prev, ticket]);
+    setTickets((prev) => [
+      ...prev,
+      {
+        ...ticket,
+        userEmail: user.email,
+        status: "unused",
+      },
+    ]);
 
     return true;
   };
 
   return (
-    <TicketContext.Provider value={{ tickets, events, addTicket }}>
+    <TicketContext.Provider value={{ tickets, events, addTicket, setTickets }}>
       {children}
     </TicketContext.Provider>
   );

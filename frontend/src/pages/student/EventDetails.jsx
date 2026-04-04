@@ -43,7 +43,6 @@ const EventDetails = () => {
       eventId: event.id,
       event: event.title,
       date: eventDetails.date,
-      status: "unused",
     };
 
     const success = addTicket(newTicket);

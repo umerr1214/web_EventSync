@@ -1,29 +1,13 @@
-import { useState } from "react";
+import { useTickets } from "../../context/TicketContext";
 
 const ManageTickets = () => {
-  // Mock ticket data (replace later with API)
-  const [tickets, setTickets] = useState([
-    {
-      id: 1,
-      user: "user@gmail.com",
-      event: "Music Night",
-      date: "2026-04-10",
-      status: "unused",
-    },
-    {
-      id: 2,
-      user: "society@gmail.com",
-      event: "Sports Gala",
-      date: "2026-04-15",
-      status: "used",
-    },
-  ]);
+  const { tickets, setTickets } = useTickets();
 
   const markAsUsed = (id) => {
-    const updatedTickets = tickets.map((ticket) =>
-      ticket.id === id ? { ...ticket, status: "used" } : ticket
+    const updated = tickets.map((t) =>
+      t.id === id ? { ...t, status: "used" } : t
     );
-    setTickets(updatedTickets);
+    setTickets(updated);
   };
 
   return (
@@ -48,7 +32,7 @@ const ManageTickets = () => {
             {tickets.map((ticket) => (
               <tr key={ticket.id} className="border-t hover:bg-gray-50">
 
-                <td className="p-4">{ticket.user}</td>
+                <td className="p-4">{ticket.userEmail}</td>
                 <td className="p-4">{ticket.event}</td>
                 <td className="p-4">{ticket.date}</td>
 
@@ -81,7 +65,7 @@ const ManageTickets = () => {
             {tickets.length === 0 && (
               <tr>
                 <td colSpan="5" className="text-center p-6 text-gray-500">
-                  No tickets available
+                  No tickets found
                 </td>
               </tr>
             )}
