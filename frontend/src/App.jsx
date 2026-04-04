@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { TicketProvider } from "./context/TicketContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // Dashboards
@@ -50,8 +51,9 @@ const Home = () => {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
+      <TicketProvider>
+        <Router>
+          <Routes>
 
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -114,15 +116,6 @@ function App() {
           />
 
           <Route
-            path="/student"
-            element={
-              <ProtectedRoute allowedRoles={["student"]}>
-                <StudentDashboard />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
             path="/student/events"
             element={
               <ProtectedRoute allowedRoles={["student"]}>
@@ -149,8 +142,9 @@ function App() {
             }
           />
 
-        </Routes>
-      </Router>
+          </Routes>
+        </Router>
+      </TicketProvider>
     </AuthProvider>
   );
 }

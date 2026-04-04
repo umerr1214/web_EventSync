@@ -1,9 +1,11 @@
 // src/pages/student/EventDetails.jsx
 import { useParams, useNavigate } from "react-router-dom";
+import { useTickets } from "../../context/TicketContext";
 
 const EventDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { addTicket } = useTickets();
 
   // Mock data (normally fetch by ID)
   const event = {
@@ -17,7 +19,15 @@ const EventDetails = () => {
   };
 
   const handleBuy = () => {
-    // Later connect to backend
+    const newTicket = {
+      id: Date.now(),
+      event: event.title,
+      date: event.date,
+      status: "unused",
+    };
+
+    addTicket(newTicket);
+
     alert("Ticket Purchased!");
     navigate("/student/tickets");
   };
