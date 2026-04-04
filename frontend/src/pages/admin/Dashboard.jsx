@@ -26,9 +26,11 @@ const AdminDashboard = () => {
                 Manage Events
             </li>
           </Link>
-          <li className="p-2 rounded-lg hover:bg-gray-200 cursor-pointer">
-            Tickets
-          </li>
+          <Link to="/admin/tickets">
+            <li className="p-2 rounded-lg hover:bg-gray-200 cursor-pointer">
+              Tickets
+            </li>
+          </Link>
         </ul>
       </div>
 

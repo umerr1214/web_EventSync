@@ -12,6 +12,7 @@ import AdminDashboard from "./pages/admin/Dashboard";
 
 import ManageEvents from "./pages/admin/ManageEvents";
 import ManageUsers from "./pages/admin/ManageUsers";
+import ManageTickets from "./pages/admin/ManageTickets";
 
 const Home = () => {
   const { user, logout } = useAuth();
@@ -95,6 +96,15 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <ManageUsers />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/tickets"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <ManageTickets />
               </ProtectedRoute>
             }
           />
