@@ -1,5 +1,6 @@
 // src/pages/admin/ManageUsers.jsx
 import { useState } from "react";
+import AdminLayout from "../../components/AdminLayout";
 
 const ManageUsers = () => {
   // Mock users (replace later with API)
@@ -22,12 +23,8 @@ const ManageUsers = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-
-      <h1 className="text-2xl font-bold mb-6">Manage Users</h1>
-
+    <AdminLayout title="Manage Users">
       <div className="bg-white rounded-2xl shadow overflow-hidden">
-
         <table className="w-full text-left">
           <thead className="bg-gray-200 text-gray-600">
             <tr>
@@ -41,7 +38,6 @@ const ManageUsers = () => {
           <tbody>
             {users.map((user) => (
               <tr key={user.id} className="border-t hover:bg-gray-50">
-
                 <td className="p-4">{user.email}</td>
 
                 <td className="p-4 capitalize">{user.role}</td>
@@ -68,7 +64,6 @@ const ManageUsers = () => {
                     Delete
                   </button>
                 </td>
-
               </tr>
             ))}
 
@@ -80,11 +75,9 @@ const ManageUsers = () => {
               </tr>
             )}
           </tbody>
-
         </table>
-
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 

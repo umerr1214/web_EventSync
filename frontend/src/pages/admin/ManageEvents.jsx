@@ -1,5 +1,6 @@
 // src/pages/admin/ManageEvents.jsx
 import { useState } from "react";
+import AdminLayout from "../../components/AdminLayout";
 
 const ManageEvents = () => {
   // Mock Data (replace later with API)
@@ -26,12 +27,8 @@ const ManageEvents = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-
-      <h1 className="text-2xl font-bold mb-6">Manage Events</h1>
-
+    <AdminLayout title="Manage Events">
       <div className="bg-white rounded-2xl shadow overflow-hidden">
-
         <table className="w-full text-left">
           <thead className="bg-gray-200 text-gray-600">
             <tr>
@@ -74,11 +71,9 @@ const ManageEvents = () => {
               </tr>
             )}
           </tbody>
-
         </table>
-
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 
