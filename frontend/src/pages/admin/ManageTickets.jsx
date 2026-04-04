@@ -1,4 +1,5 @@
 import { useTickets } from "../../context/TicketContext";
+import AdminLayout from "../../components/AdminLayout";
 
 const ManageTickets = () => {
   const { tickets, setTickets } = useTickets();
@@ -11,12 +12,8 @@ const ManageTickets = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-
-      <h1 className="text-2xl font-bold mb-6">Manage Tickets</h1>
-
+    <AdminLayout title="Manage Tickets">
       <div className="bg-white rounded-2xl shadow overflow-hidden">
-
         <table className="w-full text-left">
           <thead className="bg-gray-200 text-gray-600">
             <tr>
@@ -31,7 +28,6 @@ const ManageTickets = () => {
           <tbody>
             {tickets.map((ticket) => (
               <tr key={ticket.id} className="border-t hover:bg-gray-50">
-
                 <td className="p-4">{ticket.userEmail}</td>
                 <td className="p-4">{ticket.event}</td>
                 <td className="p-4">{ticket.date}</td>
@@ -58,7 +54,6 @@ const ManageTickets = () => {
                     </button>
                   )}
                 </td>
-
               </tr>
             ))}
 
@@ -70,11 +65,9 @@ const ManageTickets = () => {
               </tr>
             )}
           </tbody>
-
         </table>
-
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 

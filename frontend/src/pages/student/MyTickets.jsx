@@ -1,14 +1,12 @@
 // src/pages/student/MyTickets.jsx
 import { useTickets } from "../../context/TicketContext";
+import StudentLayout from "../../components/StudentLayout";
 
 const MyTickets = () => {
   const { tickets } = useTickets();
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-
-      <h1 className="text-2xl font-bold mb-6">My Tickets</h1>
-
+    <StudentLayout title="My Tickets">
       <div className="space-y-4">
         {tickets.length > 0 ? (
           tickets.map((ticket) => (
@@ -39,7 +37,7 @@ const MyTickets = () => {
           </div>
         )}
       </div>
-    </div>
+    </StudentLayout>
   );
 };
 

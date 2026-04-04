@@ -1,5 +1,6 @@
 // src/pages/student/Events.jsx
 import { Link } from "react-router-dom";
+import StudentLayout from "../../components/StudentLayout";
 
 const Events = () => {
   // Mock data
@@ -21,13 +22,9 @@ const Events = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-
-      <h1 className="text-2xl font-bold mb-6">Browse Events</h1>
-
+    <StudentLayout title="Browse Events">
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
         {events.map((event) => (
           <div
             key={event.id}
@@ -51,9 +48,8 @@ const Events = () => {
             </Link>
           </div>
         ))}
-
       </div>
-    </div>
+    </StudentLayout>
   );
 };
 

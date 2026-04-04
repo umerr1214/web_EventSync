@@ -1,5 +1,5 @@
 // src/App.jsx
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import { AuthProvider, useAuth } from "./context/AuthContext";
@@ -86,6 +86,12 @@ function App() {
                 <AdminDashboard />
               </ProtectedRoute>
             }
+          />
+
+          {/* Redirect /admin/dashboard to /admin */}
+          <Route
+            path="/admin/dashboard"
+            element={<Navigate to="/admin" replace />}
           />
 
           <Route

@@ -1,6 +1,7 @@
 // src/pages/student/EventDetails.jsx
 import { useParams, useNavigate } from "react-router-dom";
 import { useTickets } from "../../context/TicketContext";
+import StudentLayout from "../../components/StudentLayout";
 
 const EventDetails = () => {
   const { id } = useParams();
@@ -13,18 +14,20 @@ const EventDetails = () => {
   // If event not found, show error
   if (!event) {
     return (
-      <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
-        <div className="bg-white p-8 rounded-2xl shadow max-w-xl w-full text-center">
-          <h1 className="text-2xl font-bold mb-4">Event Not Found</h1>
-          <p className="text-gray-600 mb-4">The event you're looking for doesn't exist.</p>
-          <button
-            onClick={() => navigate("/student/events")}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-          >
-            Back to Events
-          </button>
+      <StudentLayout title="Event Details">
+        <div className="flex justify-center">
+          <div className="bg-white p-8 rounded-2xl shadow max-w-xl w-full text-center">
+            <h1 className="text-2xl font-bold mb-4">Event Not Found</h1>
+            <p className="text-gray-600 mb-4">The event you're looking for doesn't exist.</p>
+            <button
+              onClick={() => navigate("/student/events")}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+            >
+              Back to Events
+            </button>
+          </div>
         </div>
-      </div>
+      </StudentLayout>
     );
   }
 
@@ -54,33 +57,32 @@ const EventDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
+    <StudentLayout title="Event Details">
+      <div className="flex justify-center">
+        <div className="bg-white p-8 rounded-2xl shadow max-w-xl w-full">
+          <h1 className="text-2xl font-bold mb-4">{eventDetails.title}</h1>
 
-      <div className="bg-white p-8 rounded-2xl shadow max-w-xl w-full">
+          <p className="text-gray-600 mb-4">{eventDetails.description}</p>
 
-        <h1 className="text-2xl font-bold mb-4">{eventDetails.title}</h1>
+          <p><strong>Date:</strong> {eventDetails.date}</p>
+          <p><strong>Venue:</strong> {eventDetails.venue}</p>
+          <p><strong>Price:</strong> Rs. {eventDetails.price}</p>
+          <p><strong>Tickets Left:</strong> {event.ticketsLeft}</p>
 
-        <p className="text-gray-600 mb-4">{eventDetails.description}</p>
-
-        <p><strong>Date:</strong> {eventDetails.date}</p>
-        <p><strong>Venue:</strong> {eventDetails.venue}</p>
-        <p><strong>Price:</strong> Rs. {eventDetails.price}</p>
-        <p><strong>Tickets Left:</strong> {event.ticketsLeft}</p>
-
-        <button
-          onClick={handleBuy}
-          disabled={event.ticketsLeft <= 0}
-          className={`w-full mt-6 py-3 rounded-lg ${
-            event.ticketsLeft <= 0
-              ? "bg-gray-400 text-gray-600 cursor-not-allowed"
-              : "bg-green-600 text-white hover:bg-green-700"
-          }`}
-        >
-          {event.ticketsLeft <= 0 ? "Sold Out" : "Buy Ticket"}
-        </button>
-
+          <button
+            onClick={handleBuy}
+            disabled={event.ticketsLeft <= 0}
+            className={`w-full mt-6 py-3 rounded-lg ${
+              event.ticketsLeft <= 0
+                ? "bg-gray-400 text-gray-600 cursor-not-allowed"
+                : "bg-green-600 text-white hover:bg-green-700"
+            }`}
+          >
+            {event.ticketsLeft <= 0 ? "Sold Out" : "Buy Ticket"}
+          </button>
+        </div>
       </div>
-    </div>
+    </StudentLayout>
   );
 };
 
