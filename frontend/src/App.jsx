@@ -4,6 +4,9 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import CreateEvent from "./pages/society/CreateEvent"; 
+import SocietyManageEvents from "./pages/society/ManageEvents";
+import SocietyManageTickets from "./pages/society/ManageTickets";
 
 // Dashboards
 import StudentDashboard from "./pages/student/Dashboard";
@@ -105,6 +108,30 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <ManageTickets />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+          path="/society/create-event"
+          element={
+          <ProtectedRoute allowedRoles={["society"]}>
+            <CreateEvent />
+            </ProtectedRoute>
+          }
+          />
+
+          <Route path="/society/events"
+          element={
+          <ProtectedRoute allowedRoles={["society"]}>
+            <SocietyManageEvents />
+            </ProtectedRoute>
+          }
+          />
+
+          <Route path="/society/tickets" element={
+            <ProtectedRoute allowedRoles={["society"]}>
+              <SocietyManageTickets />
               </ProtectedRoute>
             }
           />
