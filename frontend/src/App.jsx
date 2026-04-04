@@ -14,6 +14,10 @@ import ManageEvents from "./pages/admin/ManageEvents";
 import ManageUsers from "./pages/admin/ManageUsers";
 import ManageTickets from "./pages/admin/ManageTickets";
 
+import Events from "./pages/student/Events";
+import EventDetails from "./pages/student/EventDetails";
+import MyTickets from "./pages/student/MyTickets";
+
 const Home = () => {
   const { user, logout } = useAuth();
 
@@ -105,6 +109,42 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <ManageTickets />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/student"
+            element={
+              <ProtectedRoute allowedRoles={["student"]}>
+                <StudentDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/student/events"
+            element={
+              <ProtectedRoute allowedRoles={["student"]}>
+                <Events />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/student/events/:id"
+            element={
+              <ProtectedRoute allowedRoles={["student"]}>
+                <EventDetails />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/student/tickets"
+            element={
+              <ProtectedRoute allowedRoles={["student"]}>
+                <MyTickets />
               </ProtectedRoute>
             }
           />
