@@ -10,6 +10,8 @@ import StudentDashboard from "./pages/student/Dashboard";
 import SocietyDashboard from "./pages/society/Dashboard";
 import AdminDashboard from "./pages/admin/Dashboard";
 
+import ManageEvents from "./pages/admin/ManageEvents";
+
 const Home = () => {
   const { user, logout } = useAuth();
 
@@ -74,6 +76,15 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/events"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <ManageEvents />
               </ProtectedRoute>
             }
           />
