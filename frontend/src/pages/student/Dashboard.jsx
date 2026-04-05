@@ -1,74 +1,74 @@
-// src/pages/student/Dashboard.jsx
+import React from "react";
 import { Link } from "react-router-dom";
 import StudentLayout from "../../components/StudentLayout";
+import EventCard from "../../components/EventCard";
+
+const mockEvents = [
+  {
+    id: 1,
+    event: "Music Night",
+    date: "2026-04-10",
+    venue: "Auditorium",
+    price: 500,
+    image: "https://via.placeholder.com/400x200",
+  },
+  {
+    id: 2,
+    event: "Sports Gala",
+    date: "2026-04-15",
+    venue: "Main Ground",
+    price: 300,
+    image: "https://via.placeholder.com/400x200",
+  },
+  {
+    id: 3,
+    event: "Art Exhibition",
+    date: "2026-04-20",
+    venue: "Gallery Hall",
+    price: 200,
+    image: "https://via.placeholder.com/400x200",
+  },
+];
 
 const StudentDashboard = () => {
-  // Mock data (replace later with API)
-  const upcomingEvents = [
-    {
-      id: 1,
-      title: "Music Night",
-      date: "2026-04-10",
-      venue: "Auditorium",
-    },
-    {
-      id: 2,
-      title: "Sports Gala",
-      date: "2026-04-15",
-      venue: "Ground",
-    },
-  ];
+  const upcomingEvents = mockEvents; // can replace later with API/context
+  const totalEvents = mockEvents.length;
+  const myTickets = 3; // replace with actual ticket context later
 
   return (
     <StudentLayout title="Student Dashboard">
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white p-5 rounded-2xl shadow">
           <h3 className="text-gray-500">Events Available</h3>
-          <p className="text-2xl font-bold mt-2">25</p>
+          <p className="text-2xl font-bold mt-2">{totalEvents}</p>
         </div>
 
         <div className="bg-white p-5 rounded-2xl shadow">
           <h3 className="text-gray-500">My Tickets</h3>
-          <p className="text-2xl font-bold mt-2">3</p>
+          <p className="text-2xl font-bold mt-2">{myTickets}</p>
         </div>
 
         <div className="bg-white p-5 rounded-2xl shadow">
           <h3 className="text-gray-500">Upcoming Events</h3>
-          <p className="text-2xl font-bold mt-2">
-            {upcomingEvents.length}
-          </p>
+          <p className="text-2xl font-bold mt-2">{upcomingEvents.length}</p>
         </div>
       </div>
 
-      {/* Upcoming Events */}
-      <div className="mt-8 bg-white p-6 rounded-2xl shadow">
-        <h2 className="text-xl font-semibold mb-4">
-          Upcoming Events
-        </h2>
-
-        <div className="space-y-4">
-          {upcomingEvents.map((event) => (
-            <div
-              key={event.id}
-              className="border p-4 rounded-lg flex justify-between items-center"
-            >
-              <div>
-                <h3 className="font-bold">{event.title}</h3>
-                <p className="text-gray-500 text-sm">
-                  {event.date} • {event.venue}
-                </p>
-              </div>
-
-              <Link
-                to={`/student/events/${event.id}`}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-              >
-                View
-              </Link>
-            </div>
-          ))}
-        </div>
+      {/* Upcoming Events Grid */}
+      <h2 className="text-xl font-semibold mb-4">Upcoming Events</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {upcomingEvents.map((ev) => (
+          <Link key={ev.id} to={`/student/events/${ev.id}`}>
+            <EventCard
+              event={ev.event}
+              date={ev.date}
+              venue={ev.venue}
+              price={ev.price}
+              image={ev.image}
+            />
+          </Link>
+        ))}
       </div>
     </StudentLayout>
   );
