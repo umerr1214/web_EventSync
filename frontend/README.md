@@ -1,6 +1,19 @@
 # Frontend Project Structure
 
-This document outlines the file structure for the frontend application.
+This document outlines the file structure for the frontend application and how to run this project.
+
+## Setup Instructions
+
+1. Install dependencies:
+npm install
+
+2. Run the app:
+npm run dev
+
+## Tech Stack
+- React
+- Vite
+- Tailwind CSS
 
 ## Directory Structure
 
