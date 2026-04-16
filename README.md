@@ -1,4 +1,4 @@
-## EventSync: Event Ticketing/Registration Management System
+# EventSync: Event Ticketing/Registration Management System
 
 ## About
 EventSync is a centralized web-based event management and ticketing system designed for universities. It allows societies to create, manage, and promote events while enabling students to browse, register, and purchase tickets in one place. The platform streamlines event visibility, simplifies ticket management with real-time availability, and provides role-based access for students, organizers, and admins.
