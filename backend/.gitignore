@@ -1,0 +1,19 @@
+# Environment variables
+.env
+
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+logs/
+
+# Runtime data
+*.pid
+
+# Coverage directory
+coverage/
+
+# Build output
+dist/
+build/
