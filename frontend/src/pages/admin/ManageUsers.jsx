@@ -37,7 +37,7 @@ const ManageUsers = () => {
 
           <tbody>
             {users.map((user) => (
-              <tr key={user.id} className="border-t hover:bg-gray-50">
+              <tr key={user.id} className="border-t text-gray-600 hover:bg-emerald-200">
                 <td className="p-4">{user.email}</td>
 
                 <td className="p-4 capitalize">{user.role}</td>

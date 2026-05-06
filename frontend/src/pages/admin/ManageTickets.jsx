@@ -15,7 +15,7 @@ const ManageTickets = () => {
     <AdminLayout title="Manage Tickets">
       <div className="bg-white rounded-2xl shadow overflow-hidden">
         <table className="w-full text-left">
-          <thead className="bg-gray-200 text-gray-600">
+          <thead className="text-gray-600">
             <tr>
               <th className="p-4">User</th>
               <th className="p-4">Event</th>

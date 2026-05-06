@@ -18,9 +18,9 @@ const EventCard = ({ event, date, venue, price, image, onClick }) => {
 
       {/* Event info */}
       <div className="p-4 space-y-2">
-        <h2 className="text-xl font-bold text-gray-800">{event}</h2>
-        <p className="text-gray-500 text-sm">📅 {date} • 📍 {venue}</p>
-        <p className="text-gray-600 text-sm">🎟 Price: Rs {price}</p>
+        <h2 className="text-xl font-bold text-emerald-400">{event}</h2>
+        <p className="text-gray-200 text-sm">📅 {date} • 📍 {venue}</p>
+        <p className="text-gray-200 text-sm">🎟 Price: Rs {price}</p>
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ const events = [
     date: "2026-04-10",
     venue: "Auditorium",
     price: 500,
-    image: "https://via.placeholder.com/400x200",
+    image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1374&auto=format&fit=crop",
   },
   {
     id: 2,
@@ -19,7 +19,7 @@ const events = [
     date: "2026-04-15",
     venue: "Main Ground",
     price: 300,
-    image: "https://via.placeholder.com/400x200",
+    image: "https://images.unsplash.com/photo-1521055170349-25f955971658?q=80&w=1473&auto=format&fit=crop",
   },
   {
     id: 3,
@@ -27,7 +27,7 @@ const events = [
     date: "2026-04-20",
     venue: "Gallery Hall",
     price: 200,
-    image: "https://via.placeholder.com/400x200",
+    image: "https://images.unsplash.com/photo-1606819717115-9159c900370b?q=80&w=1470&auto=format&fit=crop",
   },
 ];
 

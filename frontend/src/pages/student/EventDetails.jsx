@@ -13,7 +13,7 @@ const mockEvents = {
     venue: "Auditorium",
     price: 500,
     description: "A fun evening full of music and performances!",
-    image: "https://via.placeholder.com/600x300",
+    image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1374&auto=format&fit=crop",
     ticketsLeft: 50,
   },
   2: {
@@ -23,7 +23,7 @@ const mockEvents = {
     venue: "Main Ground",
     price: 300,
     description: "Exciting sports events organized by the university.",
-    image: "https://via.placeholder.com/600x300",
+    image: "https://images.unsplash.com/photo-1521055170349-25f955971658?q=80&w=1473&auto=format&fit=crop",
     ticketsLeft: 20,
   },
   3: {
@@ -33,7 +33,7 @@ const mockEvents = {
     venue: "Gallery Hall",
     price: 200,
     description: "Explore amazing artworks by students.",
-    image: "https://via.placeholder.com/600x300",
+    image: "https://images.unsplash.com/photo-1606819717115-9159c900370b?q=80&w=1470&auto=format&fit=crop",
     ticketsLeft: 0,
   },
 };

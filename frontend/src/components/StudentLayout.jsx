@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 
 const StudentLayout = ({ children, title }) => {
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   const menuItems = [
     { path: "/student", label: "Dashboard" },
@@ -13,17 +13,22 @@ const StudentLayout = ({ children, title }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 flex">
-      {/* Sidebar */}
-      <div className="w-64 bg-white shadow-md p-5">
-        <h2 className="text-xl font-bold mb-6">Student Panel</h2>
+    <div className="min-h-screen bg-gray-800 text-gray-200 flex">
 
-        <ul className="space-y-3">
+      {/* Sidebar */}
+      <div className="w-64 bg-gray-950 border-r border-gray-700 p-5">
+        <h2 className="text-xl font-bold mb-6 text-white">
+          Student Panel
+        </h2>
+
+        <ul className="space-y-2">
           {menuItems.map((item) => (
             <Link key={item.path} to={item.path}>
-              <li 
-                className={`p-2 rounded-lg hover:bg-gray-200 cursor-pointer ${
-                  location.pathname === item.path ? 'bg-gray-200' : ''
+              <li
+                className={`p-2 rounded-lg cursor-pointer transition ${
+                  location.pathname === item.path
+                    ? "bg-emerald-600 text-white"
+                    : "hover:bg-gray-700"
                 }`}
               >
                 {item.label}
@@ -35,24 +40,21 @@ const StudentLayout = ({ children, title }) => {
 
       {/* Main Content */}
       <div className="flex-1 p-6">
-        {/* Top Bar */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">{title}</h1>
 
-          <div className="flex items-center gap-4">
-            <span className="text-gray-600">{user?.email}</span>
-            <button
-              onClick={logout}
-              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-            >
-              Logout
-            </button>
-          </div>
+        {/* Top Bar*/}
+        <div className="flex justify-between items-center mb-6">
+
+          <h1 className="text-2xl font-bold text-white">
+            {title}
+          </h1>
+
         </div>
 
         {/* Page Content */}
         {children}
+
       </div>
+
     </div>
   );
 };

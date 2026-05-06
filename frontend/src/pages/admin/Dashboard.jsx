@@ -44,17 +44,17 @@ const AdminDashboard = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-5 rounded-2xl shadow">
+        <div className="bg-gray-900 p-5 rounded-2xl shadow">
           <h3 className="text-gray-500">Total Users</h3>
           <p className="text-2xl font-bold mt-2">120</p>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl shadow">
+        <div className="bg-gray-900 p-5 rounded-2xl shadow">
           <h3 className="text-gray-500">Total Events</h3>
           <p className="text-2xl font-bold mt-2">45</p>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl shadow">
+        <div className="bg-gray-900 p-5 rounded-2xl shadow">
           <h3 className="text-gray-500">Tickets Sold</h3>
           <p className="text-2xl font-bold mt-2">320</p>
         </div>

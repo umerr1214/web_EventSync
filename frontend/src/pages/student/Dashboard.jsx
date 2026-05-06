@@ -1,3 +1,4 @@
+// src/pages/student/Dashboard.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 import StudentLayout from "../../components/StudentLayout";
@@ -10,7 +11,8 @@ const mockEvents = [
     date: "2026-04-10",
     venue: "Auditorium",
     price: 500,
-    image: "https://via.placeholder.com/400x200",
+    image:
+      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1374&auto=format&fit=crop",
   },
   {
     id: 2,
@@ -18,7 +20,8 @@ const mockEvents = [
     date: "2026-04-15",
     venue: "Main Ground",
     price: 300,
-    image: "https://via.placeholder.com/400x200",
+    image:
+      "https://images.unsplash.com/photo-1521055170349-25f955971658?q=80&w=1473&auto=format&fit=crop",
   },
   {
     id: 3,
@@ -26,38 +29,53 @@ const mockEvents = [
     date: "2026-04-20",
     venue: "Gallery Hall",
     price: 200,
-    image: "https://via.placeholder.com/400x200",
+    image:
+      "https://images.unsplash.com/photo-1606819717115-9159c900370b?q=80&w=1470&auto=format&fit=crop",
   },
 ];
 
 const StudentDashboard = () => {
-  const upcomingEvents = mockEvents; // can replace later with API/context
+  const upcomingEvents = mockEvents;
   const totalEvents = mockEvents.length;
-  const myTickets = 3; // replace with actual ticket context later
+  const myTickets = 3;
 
   return (
     <StudentLayout title="Student Dashboard">
+
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-5 rounded-2xl shadow">
-          <h3 className="text-gray-500">Events Available</h3>
-          <p className="text-2xl font-bold mt-2">{totalEvents}</p>
+
+        <div className="bg-gray-900 border border-gray-700 p-5 rounded-2xl shadow">
+          <h3 className="text-gray-400">Events Available</h3>
+          <p className="text-2xl font-bold mt-2 text-white">
+            {totalEvents}
+          </p>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl shadow">
-          <h3 className="text-gray-500">My Tickets</h3>
-          <p className="text-2xl font-bold mt-2">{myTickets}</p>
+        <div className="bg-gray-900 border border-gray-700 p-5 rounded-2xl shadow">
+          <h3 className="text-gray-400">My Tickets</h3>
+          <p className="text-2xl font-bold mt-2 text-white">
+            {myTickets}
+          </p>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl shadow">
-          <h3 className="text-gray-500">Upcoming Events</h3>
-          <p className="text-2xl font-bold mt-2">{upcomingEvents.length}</p>
+        <div className="bg-gray-900 border border-gray-700 p-5 rounded-2xl shadow">
+          <h3 className="text-gray-400">Upcoming Events</h3>
+          <p className="text-2xl font-bold mt-2 text-white">
+            {upcomingEvents.length}
+          </p>
         </div>
+
       </div>
 
-      {/* Upcoming Events Grid */}
-      <h2 className="text-xl font-semibold mb-4">Upcoming Events</h2>
+      {/* Section Title */}
+      <h2 className="text-xl font-semibold mb-4 text-gray-200">
+        Upcoming Events
+      </h2>
+
+      {/* Events Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
         {upcomingEvents.map((ev) => (
           <Link key={ev.id} to={`/student/events/${ev.id}`}>
             <EventCard
@@ -69,7 +87,9 @@ const StudentDashboard = () => {
             />
           </Link>
         ))}
+
       </div>
+
     </StudentLayout>
   );
 };
