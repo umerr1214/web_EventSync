@@ -4,7 +4,7 @@ import React from "react";
 const EventCard = ({ event, date, venue, price, image, onClick }) => {
   return (
     <div
-      className="bg-white rounded-2xl shadow-lg overflow-hidden hover:scale-105 transform transition duration-300 cursor-pointer"
+      className="bg-gray-900 rounded-2xl shadow-lg overflow-hidden hover:scale-105 transform transition duration-300 cursor-pointer"
       onClick={onClick}
     >
       {/* Event image */}
