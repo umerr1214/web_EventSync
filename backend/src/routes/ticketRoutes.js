@@ -4,17 +4,25 @@ import {
   buyTicket,
   getMyTickets,
   getAllTickets,
+  getTicketsForEvent,
   markTicketUsed,
 } from "../controllers/ticketController.js";
+import protect from "../middleware/authMiddleware.js";
+import authorize from "../middleware/roleMiddleware.js";
 
 const router = express.Router();
 
-// For now (no auth middleware yet)
-// later we’ll protect these routes
+router.post("/", protect, authorize("student", "admin"), buyTicket);
+router.get("/my", protect, authorize("student", "admin"), getMyTickets);
 
-router.post("/", buyTicket);
-router.get("/my", getMyTickets);
-router.get("/", getAllTickets);
-router.put("/:id/use", markTicketUsed);
+router.get("/", protect, authorize("admin"), getAllTickets);
+router.get(
+  "/event/:eventId",
+  protect,
+  authorize("society", "admin"),
+  getTicketsForEvent
+);
+
+router.put("/:id/use", protect, authorize("society", "admin"), markTicketUsed);
 
 export default router;

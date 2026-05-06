@@ -3,10 +3,17 @@ import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
 
+const sanitizeUser = (user) => ({
+  _id: user._id,
+  email: user.email,
+  role: user.role,
+  societyName: user.societyName,
+});
+
 // REGISTER
 export const register = async (req, res) => {
   try {
-    const { email, password, role } = req.body;
+    const { email, password, role, societyName } = req.body;
 
     const existing = await User.findOne({ email });
     if (existing) {
@@ -19,12 +26,11 @@ export const register = async (req, res) => {
       email,
       password: hashedPassword,
       role,
+      societyName: role === "society" ? societyName : undefined,
     });
 
     res.status(201).json({
-      _id: user._id,
-      email: user.email,
-      role: user.role,
+      ...sanitizeUser(user),
       token: generateToken(user),
     });
 
@@ -52,13 +58,15 @@ export const login = async (req, res) => {
     }
 
     res.json({
-      _id: user._id,
-      email: user.email,
-      role: user.role,
+      ...sanitizeUser(user),
       token: generateToken(user),
     });
 
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+export const me = async (req, res) => {
+  res.json({ user: sanitizeUser(req.user) });
 };

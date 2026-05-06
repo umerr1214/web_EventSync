@@ -7,6 +7,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      lowercase: true,
+      trim: true,
     },
     password: {
       type: String,
@@ -17,6 +19,7 @@ const userSchema = new mongoose.Schema(
       enum: ["student", "society", "admin"],
       default: "student",
     },
+    societyName: { type: String },
   },
   { timestamps: true }
 );
