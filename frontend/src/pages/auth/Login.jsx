@@ -14,26 +14,28 @@ const Login = () => {
     e.preventDefault();
     login(email, password);
 
-    // Redirect after login
     if (email.includes("admin")) navigate("/admin");
     else if (email.includes("society")) navigate("/society");
     else navigate("/student");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-gray-200">
 
-        <h2 className="text-2xl font-bold text-center mb-6">
-          Login to your account
-        </h2>
+      {/* Title */}
+      <h1 className="text-4xl md:text-5xl font-brand tracking-widest uppercase bg-green-500 bg-clip-text text-transparent mb-8">
+        Login
+      </h1>
+
+      {/* Form Card */}
+      <div className="bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-md border border-gray-700">
 
         <form onSubmit={handleSubmit} className="space-y-4">
 
           <input
             type="email"
             placeholder="Email"
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -42,7 +44,7 @@ const Login = () => {
           <input
             type="password"
             placeholder="Password"
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -50,21 +52,22 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition"
+            className="w-full bg-emerald-500 hover:bg-emerald-700 text-white p-3 rounded-lg transition"
           >
             Login
           </button>
 
         </form>
 
-        <p className="text-sm text-center mt-4">
+        <p className="text-sm text-center mt-4 text-gray-400">
           Don’t have an account?{" "}
-          <Link to="/register" className="text-blue-600 hover:underline">
+          <Link to="/register" className="text-emerald-400 hover:underline">
             Register
           </Link>
         </p>
 
       </div>
+
     </div>
   );
 };
