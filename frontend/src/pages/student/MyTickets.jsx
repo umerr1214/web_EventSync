@@ -15,7 +15,7 @@ const MyTickets = () => {
       venue: "Auditorium",
       price: 500,
       ticketNumber: "A123",
-      status: "unused",
+      status: "Unused",
     },
     {
       id: 2,
@@ -24,7 +24,7 @@ const MyTickets = () => {
       venue: "Main Ground",
       price: 300,
       ticketNumber: "B456",
-      status: "used",
+      status: "Used",
     },
   ];
 
@@ -40,7 +40,7 @@ const MyTickets = () => {
               className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between"
             >
               <div className="space-y-2">
-                <h2 className="text-xl font-bold">{ticket.event}</h2>
+                <h2 className="text-xl font-bold text-gray-700">{ticket.event}</h2>
                 <p className="text-gray-600">📅 {ticket.date}</p>
                 <p className="text-gray-600">📍 {ticket.venue}</p>
                 <p className="text-gray-700 font-semibold">
@@ -50,7 +50,7 @@ const MyTickets = () => {
               </div>
               <span
                 className={`mt-4 px-3 py-1 rounded-full text-sm ${
-                  ticket.status === "used"
+                  ticket.status === "Used"
                     ? "bg-green-100 text-green-600"
                     : "bg-yellow-100 text-yellow-600"
                 }`}
