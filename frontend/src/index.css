@@ -1,3 +1,10 @@
+/*importing tailwind*/
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*base styling*/
+body {
+  @apply bg-gradient-to-br from-gray-100 to-blue-50 text-gray-800;
+  font-family: 'Inter', sans-serif;
+}

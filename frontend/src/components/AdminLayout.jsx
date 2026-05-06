@@ -1,10 +1,9 @@
-// src/components/AdminLayout.jsx
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const AdminLayout = ({ children, title }) => {
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   const menuItems = [
     { path: "/admin", label: "Dashboard" },
@@ -14,45 +13,55 @@ const AdminLayout = ({ children, title }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 flex">
-      {/* Sidebar */}
-      <div className="w-64 bg-white shadow-md p-5">
-        <h2 className="text-xl font-bold mb-6">Admin Panel</h2>
+    <div className="min-h-screen bg-gray-900 flex text-gray-200">
 
-        <ul className="space-y-3">
-          {menuItems.map((item) => (
-            <Link key={item.path} to={item.path}>
-              <li 
-                className={`p-2 rounded-lg hover:bg-gray-200 cursor-pointer ${
-                  location.pathname === item.path ? 'bg-gray-200' : ''
-                }`}
-              >
-                {item.label}
-              </li>
-            </Link>
-          ))}
+      {/* Sidebar */}
+      <div className="w-64 bg-gray-950 border-r border-gray-800 p-5">
+
+        <h2 className="text-xl font-bold mb-6 text-white">
+          Admin Panel
+        </h2>
+
+        <ul className="space-y-2">
+
+          {menuItems.map((item) => {
+            const isActive = location.pathname === item.path;
+
+            return (
+              <Link key={item.path} to={item.path}>
+                <li
+                  className={`p-2 rounded-lg cursor-pointer transition ${
+                    isActive
+                      ? "bg-green-600 text-white font-medium shadow-md border-l-4 border-green-600"
+                      : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                  }`}
+                >
+                  {item.label}
+                </li>
+              </Link>
+            );
+          })}
+
         </ul>
       </div>
 
       {/* Main Content */}
       <div className="flex-1 p-6">
+
         {/* Top Bar */}
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">{title}</h1>
 
-          <div className="flex items-center gap-4">
-            <span className="text-gray-600">{user?.email}</span>
-            <button
-              onClick={logout}
-              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-            >
-              Logout
-            </button>
-          </div>
+          <h1 className="text-2xl font-bold text-white">
+            {title}
+          </h1>
+
         </div>
 
         {/* Page Content */}
-        {children}
+        <div className="bg-gray-800 rounded-xl shadow-md p-4 border border-gray-700">
+          {children}
+        </div>
+
       </div>
     </div>
   );

@@ -22,7 +22,7 @@ const TicketCard = ({ event, date, venue, price, capacity, image, onClick }) => 
         <p className="text-gray-600 text-sm">
           🎟 Price: Rs {price} • 👥 Capacity: {capacity}
         </p>
-        <button className="mt-2 w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition">
+        <button className="mt-2 w-full bg-green-600 text-white py-2 rounded-xl hover:bg-blue-700 transition">
           View / Buy Ticket
         </button>
       </div>

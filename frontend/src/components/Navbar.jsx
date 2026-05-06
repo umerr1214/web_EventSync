@@ -1,106 +1,77 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import { logout } from '../features/user/userSlice'
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { Ticket } from "lucide-react";
 
 export default function Navbar() {
-  const user = useSelector(state => state.user.currentUser)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(logout())
-    navigate('/login')
-  }
+    logout();
+    navigate("/login");
+  };
 
   return (
-    <nav className="bg-white shadow-lg border-b border-gray-100 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-6 py-4">
-        <div className="flex justify-between items-center">
-          
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 group">
-            <span className="text-2xl">🚗</span>
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              Campus Rides
-            </span>
-          </Link>
+    <nav className="bg-gray-950 shadow-md border-b border-green-400 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
 
-          {/* Navigation Links */}
-          <div className="flex items-center space-x-1">
+        {/* Logo */}
+        <Link to="/" className="flex items-center space-x-2 group">
+          <Ticket className="w-6 h-6 text-green-500 group-hover:rotate-12 transition" />
 
-            {user ? (
-              <>
-                {/* User Info */}
-                <div className="hidden md:flex items-center space-x-4 mr-6">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
-                      <span className="text-white text-sm font-semibold">
-                        {user.name?.charAt(0).toUpperCase() || 'U'}
-                      </span>
-                    </div>
-                    <span className="text-gray-700 font-medium">Hi, {user.name || 'User'}!</span>
-                  </div>
-                </div>
+          <span className="text-2xl font-brand uppercase bg-white bg-clip-text text-transparent">
+            EventSync
+          </span>
+        </Link>
 
-                {/* Navigation Links */}
-                <Link
-                  to="/"
-                  className="px-4 py-2 rounded-xl text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition duration-200 font-medium"
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  to="/rides"
-                  className="px-4 py-2 rounded-xl text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition duration-200 font-medium"
-                >
-                  Rides
-                </Link>
-                <Link
-                  to="/post-ride"
-                  className="px-4 py-2 rounded-xl text-gray-700 hover:bg-green-50 hover:text-green-600 transition duration-200 font-medium"
-                >
-                  Post Ride
-                </Link>
-                <Link
-                  to="/my-bookings"
-                  className="px-4 py-2 rounded-xl text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition duration-200 font-medium"
-                >
-                  Bookings
-                </Link>
+        {/* Right Side */}
+        <div className="flex items-center gap-4">
 
-                <Link to="/change-password" className="hover:text-blue-500">
-                  Change Password
-                </Link>
+          {user ? (
+            <>
+              {/* User Info */}
+              <div className="hidden md:flex flex-col text-right">
+                <span className="text-sm font-medium text-gray-700">
+                  {user.name || user.email}
+                </span>
+                <span className="text-xs text-gray-400 capitalize">
+                  {user.role}
+                </span>
+              </div>
 
-                <Link to="/rides">Rides</Link>
-                
-                <button
-                  onClick={handleLogout}
-                  className="ml-4 bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-2 rounded-xl hover:from-red-600 hover:to-red-700 transition duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="px-6 py-2 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition duration-200 font-medium"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="ml-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-2 rounded-xl hover:from-blue-600 hover:to-indigo-700 transition duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                >
-                  Register
-                </Link>
-              </>
-            )}
+              {/* Avatar */}
+              <div className="w-9 h-9 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
+                {user.name?.charAt(0).toUpperCase() || "U"}
+              </div>
 
-          </div>
+              {/* Logout */}
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="text-gray-700 hover:text-blue-600 font-medium"
+              >
+                Login
+              </Link>
+
+              <Link
+                to="/register"
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+              >
+                Register
+              </Link>
+            </>
+          )}
+
         </div>
       </div>
     </nav>
-  )
+  );
 }

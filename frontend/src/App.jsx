@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import CreateEvent from "./pages/society/CreateEvent"; 
 import SocietyManageEvents from "./pages/society/ManageEvents";
 import SocietyManageTickets from "./pages/society/ManageTickets";
+import Navbar from "./components/Navbar";
 
 // Dashboards
 import StudentDashboard from "./pages/student/Dashboard";
@@ -23,29 +24,32 @@ import EventDetails from "./pages/student/EventDetails";
 import MyTickets from "./pages/student/MyTickets";
 
 const Home = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>Home</h1>
+    <div className="text-center mt-20">
+      <h1 className="text-3xl font-bold mb-4">
+        Welcome to EventSync!
+      </h1>
 
       {user ? (
         <>
-          <p>{user.email}</p>
-          <p>Role: {user.role}</p>
-          <button onClick={logout}>Logout</button>
+          <p className="text-gray-600">{user.email}</p>
+          <p className="mb-4 text-gray-500">
+            Role: {user.role}
+          </p>
 
-          <br /><br />
-
-          <Link to="/student">Student</Link> |{" "}
-          <Link to="/society">Society</Link> |{" "}
-          <Link to="/admin">Admin</Link>
+          <div className="mt-6 space-x-4">
+            <Link to="/student" className="text-blue-500">Student</Link>
+            <Link to="/society" className="text-green-500">Society</Link>
+            <Link to="/admin" className="text-purple-500">Admin</Link>
+          </div>
         </>
       ) : (
-        <>
-          <Link to="/login">Login</Link> |{" "}
-          <Link to="/register">Register</Link>
-        </>
+        <div className="space-x-4">
+          <Link to="/login" className="text-blue-500">Login</Link>
+          <Link to="/register" className="text-green-500">Register</Link>
+        </div>
       )}
     </div>
   );
@@ -56,121 +60,131 @@ function App() {
     <AuthProvider>
       <TicketProvider>
         <Router>
+          <Navbar />
+
           <Routes>
 
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-          {/* 🔒 Protected Routes */}
+            {/* Student Routes */}
+            <Route
+              path="/student"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <StudentDashboard />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/student"
-            element={
-              <ProtectedRoute allowedRoles={["student"]}>
-                <StudentDashboard />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="/student/events"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <Events />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/society"
-            element={
-              <ProtectedRoute allowedRoles={["society"]}>
-                <SocietyDashboard />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="/student/events/:id"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <EventDetails />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute allowedRoles={["admin"]}>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="/student/tickets"
+              element={
+                <ProtectedRoute allowedRoles={["student"]}>
+                  <MyTickets />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Redirect /admin/dashboard to /admin */}
-          <Route
-            path="/admin/dashboard"
-            element={<Navigate to="/admin" replace />}
-          />
+            {/* Society Routes */}
+            <Route
+              path="/society"
+              element={
+                <ProtectedRoute allowedRoles={["society"]}>
+                  <SocietyDashboard />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/admin/events"
-            element={
-              <ProtectedRoute allowedRoles={["admin"]}>
-                <ManageEvents />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="/society/create-event"
+              element={
+                <ProtectedRoute allowedRoles={["society"]}>
+                  <CreateEvent />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/admin/users"
-            element={
-              <ProtectedRoute allowedRoles={["admin"]}>
-                <ManageUsers />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="/society/events"
+              element={
+                <ProtectedRoute allowedRoles={["society"]}>
+                  <SocietyManageEvents />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/admin/tickets"
-            element={
-              <ProtectedRoute allowedRoles={["admin"]}>
-                <ManageTickets />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="/society/tickets"
+              element={
+                <ProtectedRoute allowedRoles={["society"]}>
+                  <SocietyManageTickets />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-          path="/society/create-event"
-          element={
-          <ProtectedRoute allowedRoles={["society"]}>
-            <CreateEvent />
-            </ProtectedRoute>
-          }
-          />
+            {/* Admin Routes */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path="/society/events"
-          element={
-          <ProtectedRoute allowedRoles={["society"]}>
-            <SocietyManageEvents />
-            </ProtectedRoute>
-          }
-          />
+            <Route
+              path="/admin/events"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <ManageEvents />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path="/society/tickets" element={
-            <ProtectedRoute allowedRoles={["society"]}>
-              <SocietyManageTickets />
-            path="/student/events"
-            element={
-              <ProtectedRoute allowedRoles={["student"]}>
-                <Events />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <ManageUsers />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/student/events/:id"
-            element={
-              <ProtectedRoute allowedRoles={["student"]}>
-                <EventDetails />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="/admin/tickets"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <ManageTickets />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/student/tickets"
-            element={
-              <ProtectedRoute allowedRoles={["student"]}>
-                <MyTickets />
-              </ProtectedRoute>
-            }
-          />
+            {/* Redirect */}
+            <Route path="/admin/dashboard" element={<Navigate to="/admin" replace />} />
 
           </Routes>
+
         </Router>
       </TicketProvider>
     </AuthProvider>
