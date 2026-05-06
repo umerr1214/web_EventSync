@@ -42,7 +42,7 @@ const ManageEvents = () => {
 
           <tbody>
             {events.map((event) => (
-              <tr key={event.id} className="border-t hover:bg-gray-50">
+              <tr key={event.id} className="border-t text-gray-600 hover:bg-emerald-200">
                 <td className="p-4">{event.title}</td>
                 <td className="p-4">{event.date}</td>
                 <td className="p-4">{event.venue}</td>
