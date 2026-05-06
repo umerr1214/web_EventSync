@@ -3,12 +3,12 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } f
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import { TicketProvider } from "./context/TicketContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CreateEvent from "./pages/society/CreateEvent"; 
 import SocietyManageEvents from "./pages/society/ManageEvents";
 import SocietyManageTickets from "./pages/society/ManageTickets";
 import Navbar from "./components/Navbar";
+import EditEvent from "./pages/society/EditEvent";
 
 // Dashboards
 import StudentDashboard from "./pages/student/Dashboard";
@@ -178,6 +178,15 @@ const Layout = () => {
         />
 
         <Route
+          path="/society/edit-event/:id"
+          element={
+            <ProtectedRoute allowedRoles={["society"]}>
+              <EditEvent />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/society/tickets"
           element={
             <ProtectedRoute allowedRoles={["society"]}>
@@ -234,11 +243,9 @@ const Layout = () => {
 function App() {
   return (
     <AuthProvider>
-      <TicketProvider>
-        <Router>
-          <Layout />
-        </Router>
-      </TicketProvider>
+      <Router>
+        <Layout />
+      </Router>
     </AuthProvider>
   );
 }

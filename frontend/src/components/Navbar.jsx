@@ -13,7 +13,7 @@ export default function Navbar({ minimal }) {
   };
 
   return (
-    <nav className="bg-gray-950 shadow-md border-b border-gray-100 sticky top-0 z-50">
+    <nav className="bg-gray-950 shadow-md border-b border-gray-800 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
 
         {/* Logo (always visible) */}
@@ -33,8 +33,8 @@ export default function Navbar({ minimal }) {
               <>
                 {/* User Info */}
                 <div className="hidden md:flex flex-col text-right">
-                  <span className="text-sm font-medium text-gray-700">
-                    {user.name || user.email}
+                  <span className="text-sm font-medium text-gray-200">
+                    {user.email}
                   </span>
                   <span className="text-xs text-gray-400 capitalize">
                     {user.role}
@@ -43,7 +43,7 @@ export default function Navbar({ minimal }) {
 
                 {/* Avatar */}
                 <div className="w-9 h-9 rounded-full bg-emerald-500 flex items-center justify-center text-white font-semibold">
-                  {user.name?.charAt(0).toUpperCase() || "U"}
+                  {user.email?.charAt(0).toUpperCase() || "U"}
                 </div>
 
                 {/* Logout */}
@@ -58,7 +58,7 @@ export default function Navbar({ minimal }) {
               <>
                 <Link
                   to="/login"
-                  className="text-gray-700 hover:text-emerald-600 font-medium"
+                  className="text-gray-200 hover:text-emerald-400 font-medium"
                 >
                   Login
                 </Link>

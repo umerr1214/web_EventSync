@@ -1,51 +1,35 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import StudentLayout from "../../components/StudentLayout";
 import EventCard from "../../components/EventCard";
 import { Link } from "react-router-dom";
-
-const mockEvents = [
-  {
-    id: 1,
-    event: "Music Night",
-    date: "2026-04-10",
-    venue: "Auditorium",
-    price: 500,
-    image:
-      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1374&auto=format&fit=crop",
-  },
-  {
-    id: 2,
-    event: "Sports Gala",
-    date: "2026-04-15",
-    venue: "Main Ground",
-    price: 300,
-    image:
-      "https://images.unsplash.com/photo-1521055170349-25f955971658?q=80&w=1473&auto=format&fit=crop",
-  },
-  {
-    id: 3,
-    event: "Art Exhibition",
-    date: "2026-04-20",
-    venue: "Gallery Hall",
-    price: 200,
-    image:
-      "https://images.unsplash.com/photo-1606819717115-9159c900370b?q=80&w=1470&auto=format&fit=crop",
-  },
-];
+import { listEvents } from "../../services/eventService";
 
 const Events = () => {
   const [search, setSearch] = useState("");
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // filtering logic (title / venue / date)
-  const filteredEvents = mockEvents.filter((event) => {
-    const query = search.toLowerCase();
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await listEvents({ q: search });
+        if (!cancelled) setEvents(Array.isArray(data) ? data : []);
+      } catch (err) {
+        if (!cancelled) setError(err.message || "Failed to load events");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [search]);
 
-    return (
-      event.event.toLowerCase().includes(query) ||
-      event.venue.toLowerCase().includes(query) ||
-      event.date.includes(query)
-    );
-  });
+  const filteredEvents = useMemo(() => events, [events]);
 
   return (
     <StudentLayout title="Browse Events">
@@ -61,20 +45,28 @@ const Events = () => {
       </div>
 
       {/* Events Grid */}
-      {filteredEvents.length === 0 ? (
+      {loading ? (
+        <p className="text-gray-400 text-center mt-10">Loading events...</p>
+      ) : error ? (
+        <p className="text-red-300 text-center mt-10">{error}</p>
+      ) : filteredEvents.length === 0 ? (
         <p className="text-gray-400 text-center mt-10">
           No events found!
         </p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredEvents.map((ev) => (
-            <Link key={ev.id} to={`/student/events/${ev.id}`}>
+            <Link key={ev._id} to={`/student/events/${ev._id}`}>
               <EventCard
-                event={ev.event}
-                date={ev.date}
+                event={ev.title}
+                date={new Date(ev.date).toLocaleDateString()}
                 venue={ev.venue}
                 price={ev.price}
-                image={ev.image}
+                image={
+                  ev.posterUrl
+                    ? `${import.meta.env.VITE_BACKEND_ORIGIN || "http://localhost:5000"}${ev.posterUrl}`
+                    : undefined
+                }
               />
             </Link>
           ))}

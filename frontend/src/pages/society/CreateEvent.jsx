@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SocietyLayout from "../../components/SocietyLayout";
+import { createEvent } from "../../services/eventService";
 
 const CreateEvent = () => {
   const navigate = useNavigate();
@@ -10,12 +12,15 @@ const CreateEvent = () => {
     venue: "",
     date: "",
     time: "",
+    category: "general",
     price: "",
     capacity: "",
-    image: null,
+    poster: null,
   });
 
   const [preview, setPreview] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,12 +30,12 @@ const CreateEvent = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setForm({ ...form, image: file });
+      setForm({ ...form, poster: file });
       setPreview(URL.createObjectURL(file));
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!form.title || !form.date || !form.venue) {
@@ -38,33 +43,48 @@ const CreateEvent = () => {
       return;
     }
 
-    console.log("Event Created:", form);
-
-    alert("Event created successfully!");
-
-    navigate("/society");
+    setSubmitting(true);
+    setError(null);
+    try {
+      await createEvent({
+        title: form.title,
+        description: form.description,
+        venue: form.venue,
+        date: form.date,
+        time: form.time,
+        category: form.category,
+        price: form.price,
+        capacity: form.capacity,
+        poster: form.poster,
+      });
+      navigate("/society/events");
+    } catch (err) {
+      setError(err.message || "Failed to create event");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-blue-50 flex justify-center items-center p-6">
-
-      <div className="bg-white w-full max-w-3xl p-8 rounded-2xl shadow-lg">
-
-        {/* Header */}
+    <SocietyLayout title="Create Event">
+      <div className="bg-gray-900 border border-gray-700 w-full max-w-3xl p-8 rounded-2xl shadow-lg mx-auto">
         <div className="mb-6 text-center">
-          <h1 className="text-3xl font-bold text-gray-800">
-            Create New Event
-          </h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <h1 className="text-3xl font-bold text-white">Create New Event</h1>
+          <p className="text-gray-400 text-sm mt-1">
             Fill in the details to publish your event
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
+          {error && (
+            <div className="bg-red-900/30 border border-red-800 text-red-200 text-sm p-3 rounded-lg">
+              {error}
+            </div>
+          )}
 
           {/* Title */}
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="block text-sm font-medium mb-1 text-gray-200">
               Event Title
             </label>
             <input
@@ -73,14 +93,14 @@ const CreateEvent = () => {
               placeholder="e.g. Music Night 2026"
               value={form.title}
               onChange={handleChange}
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full p-3 rounded-lg bg-gray-950 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               required
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="block text-sm font-medium mb-1 text-gray-200">
               Description
             </label>
             <textarea
@@ -89,13 +109,13 @@ const CreateEvent = () => {
               value={form.description}
               onChange={handleChange}
               rows="4"
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full p-3 rounded-lg bg-gray-950 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
 
           {/* Venue */}
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="block text-sm font-medium mb-1 text-gray-200">
               Venue
             </label>
             <input
@@ -104,15 +124,30 @@ const CreateEvent = () => {
               placeholder="e.g. Auditorium Hall"
               value={form.venue}
               onChange={handleChange}
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full p-3 rounded-lg bg-gray-950 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               required
+            />
+          </div>
+
+          {/* Category */}
+          <div>
+            <label className="block text-sm font-medium mb-1 text-gray-200">
+              Category
+            </label>
+            <input
+              type="text"
+              name="category"
+              placeholder="e.g. music, sports, tech"
+              value={form.category}
+              onChange={handleChange}
+              className="w-full p-3 rounded-lg bg-gray-950 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
 
           {/* Date & Time */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium mb-1 text-gray-200">
                 Date
               </label>
               <input
@@ -120,13 +155,13 @@ const CreateEvent = () => {
                 name="date"
                 value={form.date}
                 onChange={handleChange}
-                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full p-3 rounded-lg bg-gray-950 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium mb-1 text-gray-200">
                 Time
               </label>
               <input
@@ -134,7 +169,7 @@ const CreateEvent = () => {
                 name="time"
                 value={form.time}
                 onChange={handleChange}
-                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full p-3 rounded-lg bg-gray-950 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
           </div>
@@ -142,7 +177,7 @@ const CreateEvent = () => {
           {/* Price & Capacity */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium mb-1 text-gray-200">
                 Ticket Price (Rs)
               </label>
               <input
@@ -151,12 +186,12 @@ const CreateEvent = () => {
                 placeholder="500"
                 value={form.price}
                 onChange={handleChange}
-                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full p-3 rounded-lg bg-gray-950 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium mb-1 text-gray-200">
                 Capacity
               </label>
               <input
@@ -165,18 +200,18 @@ const CreateEvent = () => {
                 placeholder="100"
                 value={form.capacity}
                 onChange={handleChange}
-                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full p-3 rounded-lg bg-gray-950 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
           </div>
 
           {/* Image Upload */}
           <div>
-            <label className="block text-sm font-medium mb-2">
+            <label className="block text-sm font-medium mb-2 text-gray-200">
               Event Poster
             </label>
 
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition">
+            <div className="border-2 border-dashed border-gray-700 rounded-lg p-4 text-center hover:border-emerald-500 transition bg-gray-950">
               <input
                 type="file"
                 accept="image/*"
@@ -184,7 +219,7 @@ const CreateEvent = () => {
                 className="w-full"
               />
 
-              <p className="text-sm text-gray-500 mt-2">
+              <p className="text-sm text-gray-400 mt-2">
                 Upload an image for your event
               </p>
             </div>
@@ -203,15 +238,16 @@ const CreateEvent = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition shadow-md"
+            disabled={submitting}
+            className="w-full bg-emerald-600 text-white p-3 rounded-lg hover:bg-emerald-700 transition shadow-md disabled:opacity-60"
           >
-            Create Event
+            {submitting ? "Creating..." : "Create Event"}
           </button>
 
         </form>
 
       </div>
-    </div>
+    </SocietyLayout>
   );
 };
 

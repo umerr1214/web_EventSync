@@ -9,14 +9,23 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    login(email, password);
-
-    if (email.includes("admin")) navigate("/admin");
-    else if (email.includes("society")) navigate("/society");
-    else navigate("/student");
+    setError(null);
+    setSubmitting(true);
+    try {
+      const data = await login(email, password);
+      if (data.role === "admin") navigate("/admin");
+      else if (data.role === "society") navigate("/society");
+      else navigate("/student");
+    } catch (err) {
+      setError(err.message || "Login failed");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -31,6 +40,11 @@ const Login = () => {
       <div className="bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-md border border-gray-700">
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {error && (
+            <div className="bg-red-900/30 border border-red-800 text-red-200 text-sm p-3 rounded-lg">
+              {error}
+            </div>
+          )}
 
           <input
             type="email"
@@ -52,9 +66,10 @@ const Login = () => {
 
           <button
             type="submit"
+            disabled={submitting}
             className="w-full bg-emerald-500 hover:bg-emerald-700 text-white p-3 rounded-lg transition"
           >
-            Login
+            {submitting ? "Logging in..." : "Login"}
           </button>
 
         </form>

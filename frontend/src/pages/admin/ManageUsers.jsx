@@ -1,32 +1,66 @@
 // src/pages/admin/ManageUsers.jsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AdminLayout from "../../components/AdminLayout";
+import { deleteUser, listUsers, updateUserRole } from "../../services/userService";
 
 const ManageUsers = () => {
-  // Mock users (replace later with API)
-  const [users, setUsers] = useState([
-    { id: 1, email: "user@gmail.com", role: "student" },
-    { id: 2, email: "society@gmail.com", role: "society" },
-    { id: 3, email: "admin@gmail.com", role: "admin" },
-  ]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const load = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await listUsers();
+      setUsers(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setError(err.message || "Failed to load users");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleDelete = (id) => {
-    const updatedUsers = users.filter((user) => user.id !== id);
-    setUsers(updatedUsers);
+    const ok = window.confirm("Delete this user?");
+    if (!ok) return;
+    (async () => {
+      try {
+        await deleteUser(id);
+        await load();
+      } catch (err) {
+        alert(err.message || "Failed to delete user");
+      }
+    })();
   };
 
   const handleRoleChange = (id, newRole) => {
-    const updatedUsers = users.map((user) =>
-      user.id === id ? { ...user, role: newRole } : user
-    );
-    setUsers(updatedUsers);
+    (async () => {
+      try {
+        await updateUserRole(id, newRole);
+        await load();
+      } catch (err) {
+        alert(err.message || "Failed to update role");
+      }
+    })();
   };
 
   return (
     <AdminLayout title="Manage Users">
-      <div className="bg-white rounded-2xl shadow overflow-hidden">
+      {error && (
+        <div className="bg-red-900/30 border border-red-800 text-red-200 text-sm p-3 rounded-lg mb-4">
+          {error}
+        </div>
+      )}
+
+      <div className="bg-gray-900 border border-gray-700 rounded-2xl shadow overflow-hidden">
         <table className="w-full text-left">
-          <thead className="bg-gray-200 text-gray-600">
+          <thead className="bg-gray-950 text-gray-300">
             <tr>
               <th className="p-4">Email</th>
               <th className="p-4">Role</th>
@@ -36,8 +70,15 @@ const ManageUsers = () => {
           </thead>
 
           <tbody>
-            {users.map((user) => (
-              <tr key={user.id} className="border-t text-gray-600 hover:bg-emerald-200">
+            {loading ? (
+              <tr>
+                <td colSpan="4" className="text-center p-6 text-gray-400">
+                  Loading...
+                </td>
+              </tr>
+            ) : (
+              users.map((user) => (
+              <tr key={user._id} className="border-t border-gray-800 text-gray-200 hover:bg-gray-950/40">
                 <td className="p-4">{user.email}</td>
 
                 <td className="p-4 capitalize">{user.role}</td>
@@ -46,9 +87,9 @@ const ManageUsers = () => {
                   <select
                     value={user.role}
                     onChange={(e) =>
-                      handleRoleChange(user.id, e.target.value)
+                      handleRoleChange(user._id, e.target.value)
                     }
-                    className="p-2 border rounded-lg"
+                    className="p-2 rounded-lg bg-gray-950 border border-gray-700 text-white"
                   >
                     <option value="student">Student</option>
                     <option value="society">Society</option>
@@ -58,18 +99,18 @@ const ManageUsers = () => {
 
                 <td className="p-4">
                   <button
-                    onClick={() => handleDelete(user.id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
+                    onClick={() => handleDelete(user._id)}
+                    className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
                   >
                     Delete
                   </button>
                 </td>
               </tr>
-            ))}
+            )))
 
             {users.length === 0 && (
               <tr>
-                <td colSpan="4" className="text-center p-6 text-gray-500">
+                <td colSpan="4" className="text-center p-6 text-gray-400">
                   No users available
                 </td>
               </tr>

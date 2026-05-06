@@ -1,71 +1,96 @@
 // src/pages/admin/ManageEvents.jsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AdminLayout from "../../components/AdminLayout";
+import { deleteEvent, listEvents } from "../../services/eventService";
 
 const ManageEvents = () => {
-  // Mock Data (replace later with API)
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      title: "Music Night",
-      date: "2026-04-10",
-      venue: "Auditorium",
-      tickets: 100,
-    },
-    {
-      id: 2,
-      title: "Sports Gala",
-      date: "2026-04-15",
-      venue: "Ground",
-      tickets: 200,
-    },
-  ]);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const load = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await listEvents();
+      setEvents(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setError(err.message || "Failed to load events");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleDelete = (id) => {
-    const updatedEvents = events.filter((event) => event.id !== id);
-    setEvents(updatedEvents);
+    const ok = window.confirm("Delete this event?");
+    if (!ok) return;
+    (async () => {
+      try {
+        await deleteEvent(id);
+        await load();
+      } catch (err) {
+        alert(err.message || "Failed to delete event");
+      }
+    })();
   };
 
   return (
     <AdminLayout title="Manage Events">
-      <div className="bg-white rounded-2xl shadow overflow-hidden">
+      {error && (
+        <div className="bg-red-900/30 border border-red-800 text-red-200 text-sm p-3 rounded-lg mb-4">
+          {error}
+        </div>
+      )}
+
+      <div className="bg-gray-900 border border-gray-700 rounded-2xl shadow overflow-hidden">
         <table className="w-full text-left">
-          <thead className="bg-gray-200 text-gray-600">
+          <thead className="bg-gray-950 text-gray-300">
             <tr>
               <th className="p-4">Title</th>
               <th className="p-4">Date</th>
               <th className="p-4">Venue</th>
-              <th className="p-4">Tickets</th>
+              <th className="p-4">Availability</th>
               <th className="p-4">Actions</th>
             </tr>
           </thead>
 
           <tbody>
-            {events.map((event) => (
-              <tr key={event.id} className="border-t text-gray-600 hover:bg-emerald-200">
-                <td className="p-4">{event.title}</td>
-                <td className="p-4">{event.date}</td>
-                <td className="p-4">{event.venue}</td>
-                <td className="p-4">{event.tickets}</td>
-
-                <td className="p-4 flex gap-2">
-                  <button className="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600">
-                    Edit
-                  </button>
-
-                  <button
-                    onClick={() => handleDelete(event.id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
-                  >
-                    Delete
-                  </button>
+            {loading ? (
+              <tr>
+                <td colSpan="5" className="text-center p-6 text-gray-400">
+                  Loading...
                 </td>
               </tr>
-            ))}
+            ) : (
+              events.map((event) => (
+                <tr key={event._id} className="border-t border-gray-800 text-gray-200 hover:bg-gray-950/40">
+                  <td className="p-4">{event.title}</td>
+                  <td className="p-4">{new Date(event.date).toLocaleDateString()}</td>
+                  <td className="p-4">{event.venue}</td>
+                  <td className="p-4">
+                    {event.ticketsAvailable ?? "-"} / {event.capacity}
+                  </td>
+
+                  <td className="p-4 flex gap-2">
+                    <button
+                      onClick={() => handleDelete(event._id)}
+                      className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
 
             {events.length === 0 && (
               <tr>
-                <td colSpan="5" className="text-center p-6 text-gray-500">
+                <td colSpan="5" className="text-center p-6 text-gray-400">
                   No events available
                 </td>
               </tr>

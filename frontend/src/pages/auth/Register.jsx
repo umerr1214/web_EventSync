@@ -10,13 +10,25 @@ const Register = () => {
     email: "",
     password: "",
     role: "student",
+    societyName: "",
   });
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    register(form.email, form.password, form.role);
-
-    navigate("/login");
+    setError(null);
+    setSubmitting(true);
+    try {
+      await register(form.email, form.password, form.role, form.societyName);
+      // after register we can route by role
+      if (form.role === "society") navigate("/society");
+      else navigate("/student");
+    } catch (err) {
+      setError(err.message || "Registration failed");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -31,6 +43,11 @@ const Register = () => {
       <div className="bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-md border border-gray-700">
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {error && (
+            <div className="bg-red-900/30 border border-red-800 text-red-200 text-sm p-3 rounded-lg">
+              {error}
+            </div>
+          )}
 
           <input
             type="email"
@@ -60,11 +77,22 @@ const Register = () => {
             <option value="society">Society Head</option>
           </select>
 
+          {form.role === "society" && (
+            <input
+              type="text"
+              placeholder="Society name (optional)"
+              className="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              value={form.societyName}
+              onChange={(e) => setForm({ ...form, societyName: e.target.value })}
+            />
+          )}
+
           <button
             type="submit"
+            disabled={submitting}
             className="w-full bg-emerald-500 hover:bg-emerald-700 text-white p-3 rounded-lg transition"
           >
-            Register
+            {submitting ? "Creating..." : "Register"}
           </button>
 
         </form>
