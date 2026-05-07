@@ -1,37 +1,38 @@
-// src/context/AuthContext.jsx
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import * as authService from "../services/authService.js";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const login = (email, password) => {
-    // MOCK LOGIN (replace later with API)
-    if (email && password) {
-      const mockUser = {
-        email,
-        role: email.includes("admin")
-          ? "admin"
-          : email.includes("society")
-          ? "society"
-          : "student",
-      };
-      setUser(mockUser);
-    }
+  useEffect(() => {
+    const stored = localStorage.getItem("user");
+    if (stored) setUser(JSON.parse(stored));
+    setLoading(false);
+  }, []);
+
+  const login = async (email, password) => {
+    const data = await authService.login(email, password);
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify({ _id: data._id, email: data.email, role: data.role }));
+    setUser({ _id: data._id, email: data.email, role: data.role });
+    return data.role;
   };
 
-const register = (email, password, role = "student") => {
-  const newUser = { email, role };
-  setUser(newUser);
-};
+  const register = async (email, password, role) => {
+    await authService.register(email, password, role);
+  };
 
   const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

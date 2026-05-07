@@ -1,25 +1,30 @@
-// src/pages/admin/ManageUsers.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdminLayout from "../../components/AdminLayout";
+import { getUsers, deleteUser, updateUserRole } from "../../services/userService.js";
 
 const ManageUsers = () => {
-  // Mock users (replace later with API)
-  const [users, setUsers] = useState([
-    { id: 1, email: "user@gmail.com", role: "student" },
-    { id: 2, email: "society@gmail.com", role: "society" },
-    { id: 3, email: "admin@gmail.com", role: "admin" },
-  ]);
+  const [users, setUsers] = useState([]);
 
-  const handleDelete = (id) => {
-    const updatedUsers = users.filter((user) => user.id !== id);
-    setUsers(updatedUsers);
+  useEffect(() => {
+    getUsers().then(setUsers).catch(console.error);
+  }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteUser(id);
+      setUsers(users.filter((u) => u._id !== id));
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
-  const handleRoleChange = (id, newRole) => {
-    const updatedUsers = users.map((user) =>
-      user.id === id ? { ...user, role: newRole } : user
-    );
-    setUsers(updatedUsers);
+  const handleRoleChange = async (id, newRole) => {
+    try {
+      const updated = await updateUserRole(id, newRole);
+      setUsers(users.map((u) => (u._id === id ? updated : u)));
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   return (
@@ -34,20 +39,15 @@ const ManageUsers = () => {
               <th className="p-4">Actions</th>
             </tr>
           </thead>
-
           <tbody>
             {users.map((user) => (
-              <tr key={user.id} className="border-t text-gray-600 hover:bg-emerald-200">
+              <tr key={user._id} className="border-t text-gray-600 hover:bg-emerald-200">
                 <td className="p-4">{user.email}</td>
-
                 <td className="p-4 capitalize">{user.role}</td>
-
                 <td className="p-4">
                   <select
                     value={user.role}
-                    onChange={(e) =>
-                      handleRoleChange(user.id, e.target.value)
-                    }
+                    onChange={(e) => handleRoleChange(user._id, e.target.value)}
                     className="p-2 border rounded-lg"
                   >
                     <option value="student">Student</option>
@@ -55,10 +55,9 @@ const ManageUsers = () => {
                     <option value="admin">Admin</option>
                   </select>
                 </td>
-
                 <td className="p-4">
                   <button
-                    onClick={() => handleDelete(user.id)}
+                    onClick={() => handleDelete(user._id)}
                     className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
                   >
                     Delete
@@ -66,12 +65,9 @@ const ManageUsers = () => {
                 </td>
               </tr>
             ))}
-
             {users.length === 0 && (
               <tr>
-                <td colSpan="4" className="text-center p-6 text-gray-500">
-                  No users available
-                </td>
+                <td colSpan="4" className="text-center p-6 text-gray-500">No users available</td>
               </tr>
             )}
           </tbody>

@@ -1,59 +1,51 @@
-// src/controllers/eventController.js
 import Event from "../models/Event.js";
 
-// CREATE EVENT
 export const createEvent = async (req, res) => {
   try {
-    const event = await Event.create(req.body);
+    const event = await Event.create({ ...req.body, createdBy: req.user._id });
     res.status(201).json(event);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// GET ALL EVENTS
 export const getEvents = async (req, res) => {
-  const events = await Event.find();
-  res.json(events);
+  try {
+    const filter = {};
+    if (req.query.createdBy) filter.createdBy = req.query.createdBy;
+    const events = await Event.find(filter);
+    res.json(events);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-// GET SINGLE EVENT
 export const getEventById = async (req, res) => {
-  const event = await Event.findById(req.params.id);
-
-  if (!event) {
-    return res.status(404).json({ message: "Event not found" });
+  try {
+    const event = await Event.findById(req.params.id);
+    if (!event) return res.status(404).json({ message: "Event not found" });
+    res.json(event);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  res.json(event);
 };
 
-// UPDATE EVENT
 export const updateEvent = async (req, res) => {
-  const event = await Event.findById(req.params.id);
-
-  if (!event) {
-    return res.status(404).json({ message: "Event not found" });
+  try {
+    const event = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!event) return res.status(404).json({ message: "Event not found" });
+    res.json(event);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  const updated = await Event.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { new: true }
-  );
-
-  res.json(updated);
 };
 
-// DELETE EVENT
 export const deleteEvent = async (req, res) => {
-  const event = await Event.findById(req.params.id);
-
-  if (!event) {
-    return res.status(404).json({ message: "Event not found" });
+  try {
+    const event = await Event.findByIdAndDelete(req.params.id);
+    if (!event) return res.status(404).json({ message: "Event not found" });
+    res.json({ message: "Event deleted" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  await event.deleteOne();
-
-  res.json({ message: "Event deleted" });
 };
