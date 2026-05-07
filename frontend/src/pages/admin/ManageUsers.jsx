@@ -29,9 +29,9 @@ const ManageUsers = () => {
 
   return (
     <AdminLayout title="Manage Users">
-      <div className="bg-white rounded-2xl shadow overflow-hidden">
+      <div className="bg-gray-900 rounded-2xl overflow-hidden">
         <table className="w-full text-left">
-          <thead className="bg-gray-200 text-gray-600">
+          <thead className="bg-gray-950 text-gray-400 text-sm uppercase tracking-wide">
             <tr>
               <th className="p-4">Email</th>
               <th className="p-4">Role</th>
@@ -41,14 +41,22 @@ const ManageUsers = () => {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user._id} className="border-t text-gray-600 hover:bg-emerald-200">
+              <tr key={user._id} className="border-t border-gray-800 text-gray-200 hover:bg-gray-800 transition">
                 <td className="p-4">{user.email}</td>
-                <td className="p-4 capitalize">{user.role}</td>
+                <td className="p-4 capitalize">
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    user.role === "admin" ? "bg-red-900/50 text-red-300" :
+                    user.role === "society" ? "bg-blue-900/50 text-blue-300" :
+                    "bg-emerald-900/50 text-emerald-300"
+                  }`}>
+                    {user.role}
+                  </span>
+                </td>
                 <td className="p-4">
                   <select
                     value={user.role}
                     onChange={(e) => handleRoleChange(user._id, e.target.value)}
-                    className="p-2 border rounded-lg"
+                    className="p-2 rounded-lg bg-gray-700 border border-gray-600 text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   >
                     <option value="student">Student</option>
                     <option value="society">Society</option>
@@ -58,7 +66,7 @@ const ManageUsers = () => {
                 <td className="p-4">
                   <button
                     onClick={() => handleDelete(user._id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
+                    className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-sm transition"
                   >
                     Delete
                   </button>

@@ -20,9 +20,9 @@ const ManageTickets = () => {
 
   return (
     <AdminLayout title="Manage Tickets">
-      <div className="bg-white rounded-2xl shadow overflow-hidden">
+      <div className="bg-gray-900 rounded-2xl overflow-hidden">
         <table className="w-full text-left">
-          <thead className="text-gray-600">
+          <thead className="bg-gray-950 text-gray-400 text-sm uppercase tracking-wide">
             <tr>
               <th className="p-4">User</th>
               <th className="p-4">Event</th>
@@ -33,16 +33,16 @@ const ManageTickets = () => {
           </thead>
           <tbody>
             {tickets.map((ticket) => (
-              <tr key={ticket._id} className="border-t hover:bg-gray-50">
+              <tr key={ticket._id} className="border-t border-gray-800 text-gray-200 hover:bg-gray-800 transition">
                 <td className="p-4">{ticket.user?.email}</td>
                 <td className="p-4">{ticket.event?.title}</td>
                 <td className="p-4">{ticket.event?.date ? new Date(ticket.event.date).toLocaleDateString() : ""}</td>
                 <td className="p-4">
                   <span
-                    className={`px-3 py-1 rounded-full text-sm ${
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${
                       ticket.status === "used"
-                        ? "bg-green-100 text-green-600"
-                        : "bg-yellow-100 text-yellow-600"
+                        ? "bg-green-900/50 text-green-300"
+                        : "bg-yellow-900/50 text-yellow-300"
                     }`}
                   >
                     {ticket.status}
@@ -52,7 +52,7 @@ const ManageTickets = () => {
                   {ticket.status === "unused" && (
                     <button
                       onClick={() => handleMarkUsed(ticket._id)}
-                      className="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600"
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-sm transition"
                     >
                       Mark as Used
                     </button>

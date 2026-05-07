@@ -65,10 +65,8 @@ const EventDetails = () => {
             <p className="text-gray-700 font-semibold">🎟 Price: Rs {event.price}</p>
             <p className="text-gray-700 font-semibold">🏷 Tickets Left: {ticketsLeft}</p>
 
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-
             <button
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => { setError(""); setIsModalOpen(true); }}
               disabled={ticketsLeft <= 0}
               className={`w-full mt-4 py-3 rounded-lg ${
                 ticketsLeft <= 0
@@ -84,24 +82,33 @@ const EventDetails = () => {
 
       <Modal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => { setIsModalOpen(false); setError(""); }}
         title={`Register for ${event.title}`}
       >
         <p className="text-gray-700 mb-4">
           Confirm your registration for <strong>{event.title}</strong>?
         </p>
-        <button
-          onClick={handleBuy}
-          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 mr-2"
-        >
-          Yes, Buy Ticket
-        </button>
-        <button
-          onClick={() => setIsModalOpen(false)}
-          className="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400"
-        >
-          Cancel
-        </button>
+
+        {error && (
+          <p className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-4">
+            {error}
+          </p>
+        )}
+
+        <div className="flex gap-2">
+          <button
+            onClick={handleBuy}
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+          >
+            Yes, Buy Ticket
+          </button>
+          <button
+            onClick={() => { setIsModalOpen(false); setError(""); }}
+            className="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400"
+          >
+            Cancel
+          </button>
+        </div>
       </Modal>
     </StudentLayout>
   );
