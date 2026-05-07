@@ -1,217 +1,178 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SocietyLayout from "../../components/SocietyLayout";
+import { createEvent } from "../../services/eventService.js";
+
+const BASE_URL = "http://localhost:5000";
+
+const uploadImage = async (file) => {
+  const token = localStorage.getItem("token");
+  const formData = new FormData();
+  formData.append("image", file);
+  const res = await fetch(`${BASE_URL}/upload`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Upload failed");
+  return data.url;
+};
 
 const CreateEvent = () => {
   const navigate = useNavigate();
-
   const [form, setForm] = useState({
-    title: "",
-    description: "",
-    venue: "",
-    date: "",
-    time: "",
-    price: "",
-    capacity: "",
-    image: null,
+    title: "", description: "", venue: "", date: "", time: "", price: "", capacity: "",
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [error, setError] = useState("");
+  const [uploading, setUploading] = useState(false);
 
-  const [preview, setPreview] = useState(null);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setForm({ ...form, image: file });
-      setPreview(URL.createObjectURL(file));
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setError("");
     if (!form.title || !form.date || !form.venue) {
-      alert("Please fill required fields");
+      setError("Please fill required fields");
       return;
     }
-
-    console.log("Event Created:", form);
-
-    alert("Event created successfully!");
-
-    navigate("/society");
+    try {
+      let imageUrl = "";
+      if (imageFile) {
+        setUploading(true);
+        imageUrl = await uploadImage(imageFile);
+        setUploading(false);
+      }
+      await createEvent({
+        ...form,
+        price: Number(form.price),
+        capacity: Number(form.capacity),
+        image: imageUrl,
+      });
+      navigate("/society/events");
+    } catch (err) {
+      setUploading(false);
+      setError(err.message);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-blue-50 flex justify-center items-center p-6">
+    <SocietyLayout title="Create Event">
 
-      <div className="bg-white w-full max-w-3xl p-8 rounded-2xl shadow-lg">
+      {/* Back button */}
+      <button
+        onClick={() => navigate(-1)}
+        className="mb-6 flex items-center gap-2 text-gray-400 hover:text-white transition text-sm"
+      >
+        ← Back
+      </button>
 
-        {/* Header */}
-        <div className="mb-6 text-center">
-          <h1 className="text-3xl font-bold text-gray-800">
-            Create New Event
-          </h1>
-          <p className="text-gray-500 text-sm mt-1">
-            Fill in the details to publish your event
-          </p>
-        </div>
+      <div className="bg-gray-900 rounded-2xl p-8 max-w-3xl">
+
+        {error && (
+          <p className="text-red-400 text-sm bg-red-900/30 border border-red-700 rounded-lg px-4 py-2 mb-5">{error}</p>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
 
-          {/* Title */}
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Event Title
-            </label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Event Title *</label>
             <input
-              type="text"
-              name="title"
-              placeholder="e.g. Music Night 2026"
-              value={form.title}
-              onChange={handleChange}
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              type="text" name="title" placeholder="e.g. Music Night 2026"
+              value={form.title} onChange={handleChange}
+              className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               required
             />
           </div>
 
-          {/* Description */}
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Description
-            </label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Description</label>
             <textarea
-              name="description"
-              placeholder="Describe your event..."
-              value={form.description}
-              onChange={handleChange}
-              rows="4"
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              name="description" placeholder="Describe your event..."
+              value={form.description} onChange={handleChange} rows="3"
+              className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
 
-          {/* Venue */}
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Venue
-            </label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Venue *</label>
             <input
-              type="text"
-              name="venue"
-              placeholder="e.g. Auditorium Hall"
-              value={form.venue}
-              onChange={handleChange}
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              type="text" name="venue" placeholder="e.g. Auditorium Hall"
+              value={form.venue} onChange={handleChange}
+              className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               required
             />
           </div>
 
-          {/* Date & Time */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">
-                Date
-              </label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Date *</label>
               <input
-                type="date"
-                name="date"
-                value={form.date}
-                onChange={handleChange}
-                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                type="date" name="date" value={form.date} onChange={handleChange}
+                className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 required
               />
             </div>
-
             <div>
-              <label className="block text-sm font-medium mb-1">
-                Time
-              </label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Time</label>
               <input
-                type="time"
-                name="time"
-                value={form.time}
-                onChange={handleChange}
-                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                type="time" name="time" value={form.time} onChange={handleChange}
+                className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
           </div>
 
-          {/* Price & Capacity */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">
-                Ticket Price (Rs)
-              </label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Ticket Price (Rs)</label>
               <input
-                type="number"
-                name="price"
-                placeholder="500"
-                value={form.price}
-                onChange={handleChange}
-                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                type="number" name="price" placeholder="500"
+                value={form.price} onChange={handleChange}
+                className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
-
             <div>
-              <label className="block text-sm font-medium mb-1">
-                Capacity
-              </label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Capacity</label>
               <input
-                type="number"
-                name="capacity"
-                placeholder="100"
-                value={form.capacity}
-                onChange={handleChange}
-                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                type="number" name="capacity" placeholder="100"
+                value={form.capacity} onChange={handleChange}
+                className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
           </div>
 
-          {/* Image Upload */}
           <div>
-            <label className="block text-sm font-medium mb-2">
-              Event Poster
-            </label>
-
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="w-full"
-              />
-
-              <p className="text-sm text-gray-500 mt-2">
-                Upload an image for your event
-              </p>
-            </div>
-
-            {/* Preview */}
-            <img
-              src={
-                preview ||
-                "https://images.unsplash.com/photo-1514525253161-7a46d19cd819"
-              }
-              alt="Preview"
-              className="mt-4 w-full h-48 object-cover rounded-lg"
+            <label className="block text-sm font-medium text-gray-300 mb-2">Event Poster</label>
+            <input
+              type="file" accept="image/*" onChange={handleImageChange}
+              className="w-full text-gray-400 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-emerald-700 file:text-white hover:file:bg-emerald-600"
             />
+            {imagePreview && (
+              <img src={imagePreview} alt="Preview" className="mt-4 w-full h-48 object-cover rounded-lg" />
+            )}
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition shadow-md"
+            disabled={uploading}
+            className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-600 text-white p-3 rounded-lg transition font-medium shadow-md"
           >
-            Create Event
+            {uploading ? "Uploading image..." : "Create Event"}
           </button>
 
         </form>
-
       </div>
-    </div>
+    </SocietyLayout>
   );
 };
 

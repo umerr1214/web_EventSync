@@ -6,32 +6,34 @@ const Register = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-    role: "student",
-  });
+  const [form, setForm] = useState({ email: "", password: "", role: "student" });
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    register(form.email, form.password, form.role);
-
-    navigate("/login");
+    setError("");
+    try {
+      await register(form.email, form.password, form.role);
+      navigate("/login");
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-gray-200">
 
-      {/* Title */}
       <h1 className="text-4xl md:text-5xl font-brand tracking-widest uppercase bg-emerald-500 bg-clip-text text-transparent mb-8">
         Register
       </h1>
 
-      {/* Form Card */}
       <div className="bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-md border border-gray-700">
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        {error && (
+          <p className="text-red-400 text-sm text-center mb-4">{error}</p>
+        )}
 
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"
             placeholder="Email"
@@ -50,7 +52,6 @@ const Register = () => {
             required
           />
 
-          {/* Role Selection */}
           <select
             className="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
             value={form.role}
@@ -66,7 +67,6 @@ const Register = () => {
           >
             Register
           </button>
-
         </form>
 
         <p className="text-sm text-center mt-4 text-gray-400">

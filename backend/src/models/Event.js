@@ -10,7 +10,9 @@ const eventSchema = new mongoose.Schema(
     price: Number,
     capacity: Number,
     ticketsSold: { type: Number, default: 0 },
-    createdBy: { type: String }, // later: userId
+    image: String,
+    time: String,
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true }
 );

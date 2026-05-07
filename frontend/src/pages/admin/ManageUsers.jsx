@@ -1,32 +1,37 @@
-// src/pages/admin/ManageUsers.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdminLayout from "../../components/AdminLayout";
+import { getUsers, deleteUser, updateUserRole } from "../../services/userService.js";
 
 const ManageUsers = () => {
-  // Mock users (replace later with API)
-  const [users, setUsers] = useState([
-    { id: 1, email: "user@gmail.com", role: "student" },
-    { id: 2, email: "society@gmail.com", role: "society" },
-    { id: 3, email: "admin@gmail.com", role: "admin" },
-  ]);
+  const [users, setUsers] = useState([]);
 
-  const handleDelete = (id) => {
-    const updatedUsers = users.filter((user) => user.id !== id);
-    setUsers(updatedUsers);
+  useEffect(() => {
+    getUsers().then(setUsers).catch(console.error);
+  }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteUser(id);
+      setUsers(users.filter((u) => u._id !== id));
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
-  const handleRoleChange = (id, newRole) => {
-    const updatedUsers = users.map((user) =>
-      user.id === id ? { ...user, role: newRole } : user
-    );
-    setUsers(updatedUsers);
+  const handleRoleChange = async (id, newRole) => {
+    try {
+      const updated = await updateUserRole(id, newRole);
+      setUsers(users.map((u) => (u._id === id ? updated : u)));
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   return (
     <AdminLayout title="Manage Users">
-      <div className="bg-white rounded-2xl shadow overflow-hidden">
+      <div className="bg-gray-900 rounded-2xl overflow-hidden">
         <table className="w-full text-left">
-          <thead className="bg-gray-200 text-gray-600">
+          <thead className="bg-gray-950 text-gray-400 text-sm uppercase tracking-wide">
             <tr>
               <th className="p-4">Email</th>
               <th className="p-4">Role</th>
@@ -34,44 +39,43 @@ const ManageUsers = () => {
               <th className="p-4">Actions</th>
             </tr>
           </thead>
-
           <tbody>
             {users.map((user) => (
-              <tr key={user.id} className="border-t text-gray-600 hover:bg-emerald-200">
+              <tr key={user._id} className="border-t border-gray-800 text-gray-200 hover:bg-gray-800 transition">
                 <td className="p-4">{user.email}</td>
-
-                <td className="p-4 capitalize">{user.role}</td>
-
+                <td className="p-4 capitalize">
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    user.role === "admin" ? "bg-red-900/50 text-red-300" :
+                    user.role === "society" ? "bg-blue-900/50 text-blue-300" :
+                    "bg-emerald-900/50 text-emerald-300"
+                  }`}>
+                    {user.role}
+                  </span>
+                </td>
                 <td className="p-4">
                   <select
                     value={user.role}
-                    onChange={(e) =>
-                      handleRoleChange(user.id, e.target.value)
-                    }
-                    className="p-2 border rounded-lg"
+                    onChange={(e) => handleRoleChange(user._id, e.target.value)}
+                    className="p-2 rounded-lg bg-gray-700 border border-gray-600 text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   >
                     <option value="student">Student</option>
                     <option value="society">Society</option>
                     <option value="admin">Admin</option>
                   </select>
                 </td>
-
                 <td className="p-4">
                   <button
-                    onClick={() => handleDelete(user.id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
+                    onClick={() => handleDelete(user._id)}
+                    className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-sm transition"
                   >
                     Delete
                   </button>
                 </td>
               </tr>
             ))}
-
             {users.length === 0 && (
               <tr>
-                <td colSpan="4" className="text-center p-6 text-gray-500">
-                  No users available
-                </td>
+                <td colSpan="4" className="text-center p-6 text-gray-500">No users available</td>
               </tr>
             )}
           </tbody>
